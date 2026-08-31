@@ -1,0 +1,48 @@
+# Brings up MongoDB, the API and the client together.
+#
+#   docker compose up --build
+#
+# The app is then served at http://localhost:5173 and the API at :4000.
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: atm-mongo
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ['CMD', 'mongosh', '--eval', "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build: ./server
+    container_name: atm-server
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      PORT: 4000
+      MONGODB_URI: mongodb://mongo:27017/agile_task_manager
+      JWT_SECRET: ${JWT_SECRET:-local-development-secret-change-me}
+      JWT_EXPIRES_IN: 7d
+      CLIENT_ORIGIN: http://localhost:5173
+    ports:
+      - '4000:4000'
+
+  client:
+    build: ./client
+    container_name: atm-client
+    restart: unless-stopped
+    depends_on:
+      - server
+    ports:
+      - '5173:80'
+
+volumes:
+  mongo-data:

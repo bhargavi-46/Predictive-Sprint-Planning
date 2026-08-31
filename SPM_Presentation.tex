@@ -1,0 +1,465 @@
+\documentclass[11pt,aspectratio=169]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,arrows.meta,positioning,fit,backgrounds,calc}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{hyperref}
+
+\usetheme{default}
+\usefonttheme{professionalfonts}
+
+% =====================================================================
+%  COLOUR PALETTE  --  deep wine + brick + warm gold accent (no navy/blue)
+% =====================================================================
+\definecolor{navyDeep}{RGB}{110,45,58}      % headers, footer (lighter wine)
+\definecolor{navyMid}{RGB}{168,78,86}       % block titles, table headers (lighter brick)
+\definecolor{tealAccent}{RGB}{212,166,88}   % bullets, rules, highlights (warm gold)
+\definecolor{rustAccent}{RGB}{52,142,126}   % alert / emphasis (lighter forest teal)
+\definecolor{paperGrey}{RGB}{247,243,238}  % block bodies (warm off-white)
+\definecolor{lineGrey}{RGB}{214,204,198}
+
+\setbeamercolor{structure}{fg=navyMid}
+\setbeamercolor{frametitle}{bg=navyDeep, fg=white}
+\setbeamercolor{title}{bg=navyDeep, fg=white}
+\setbeamercolor{item}{fg=tealAccent}
+\setbeamercolor{block title}{bg=navyMid, fg=white}
+\setbeamercolor{block body}{bg=paperGrey, fg=black}
+\setbeamercolor{block title alerted}{bg=rustAccent, fg=white}
+\setbeamercolor{block body alerted}{bg=rustAccent!8, fg=black}
+\setbeamercolor{caption name}{fg=navyMid}
+
+% ---- Frame title: solid navy bar with a teal underline -------------
+\setbeamertemplate{frametitle}{%
+  \nointerlineskip%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=3.1ex,dp=1.5ex,leftskip=0.55cm]{frametitle}%
+    \usebeamerfont{frametitle}\insertframetitle%
+  \end{beamercolorbox}%
+  \nointerlineskip%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=0.6mm,dp=0mm]{}%
+    \color{tealAccent}\rule{\paperwidth}{0.6mm}%
+  \end{beamercolorbox}%
+  \vskip0.35cm%
+}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+
+% ---- Footer: three zones, all white-on-navy for full legibility ----
+\setbeamercolor{footL}{bg=navyDeep, fg=white}
+\setbeamercolor{footC}{bg=navyMid,  fg=white}
+\setbeamercolor{footR}{bg=navyDeep, fg=white}
+
+\setbeamertemplate{footline}{%
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.30\paperwidth,ht=3.0ex,dp=1.5ex,left]{footL}%
+      \hspace*{0.55cm}\usebeamerfont{footline}\scriptsize Group 24 \textbullet\ CSE
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.50\paperwidth,ht=3.0ex,dp=1.5ex,center]{footC}%
+      \usebeamerfont{footline}\scriptsize Predictive Sprint Planning \& Delivery Risk Tool
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.20\paperwidth,ht=3.0ex,dp=1.5ex,right]{footR}%
+      \usebeamerfont{footline}\scriptsize\insertframenumber\,/\,\inserttotalframenumber\hspace*{0.4cm}
+    \end{beamercolorbox}%
+  }%
+  \vskip0pt%
+}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize item}{\color{tealAccent}\raisebox{0.15ex}{\scriptsize$\blacksquare$}}
+\setbeamertemplate{itemize subitem}{\color{navyMid}\textendash}
+\setbeamertemplate{enumerate item}{\color{white}\colorbox{navyMid}{\footnotesize\insertenumlabel}}
+\setbeamertemplate{blocks}[rounded][shadow=false]
+
+\setbeamersize{text margin left=0.75cm, text margin right=0.75cm}
+\hypersetup{colorlinks=true, linkcolor=navyMid, urlcolor=navyMid}
+
+% ---- Helper: a centred, non-overflowing ROUNDED highlight panel -----
+\newcommand{\panel}[2][0.86]{%
+  \begin{center}%
+  \begin{tikzpicture}
+    \node[fill=navyMid, rounded corners=8pt, text=white, align=left,
+          text width=#1\textwidth-12pt, inner sep=6pt] {#2};
+  \end{tikzpicture}%
+  \end{center}%
+}
+
+\title{Predictive Sprint Planning \& Delivery Risk Tool}
+\author{Group 24}
+\date{2026}
+
+\begin{document}
+
+% ===================================================================
+% SLIDE 1 -- Title
+% ===================================================================
+\begin{frame}[plain]
+  \vspace{-0.15cm}
+  \begin{center}
+    {\Large\bfseries\color{navyDeep} Predictive Sprint Planning \& Delivery Risk Tool}\\[2pt]
+    {\color{tealAccent}\rule{0.82\textwidth}{1pt}}\\[2pt]
+    {\small\itshape\color{navyMid} A Dependency-Aware Sprint Forecasting System for Small Development Teams}\\[2pt]
+
+  \end{center}
+
+  \vspace{0.08cm}
+
+  \panel[0.95]{\footnotesize\textbf{Problem Statement (Problem 39).}\; Small development teams can see what
+  they have completed, but not whether they will finish on time. Existing tools report progress after the
+  fact, ignore dependencies between tasks, and silently absorb work added mid-sprint --- so delays surface
+  only once they have already happened.}
+
+  \vspace{0.08cm}
+
+  \begin{center}
+    {\footnotesize Software Project Management \ \textbullet\ \ Computer Science \& Engineering\\
+    Indian Institute of Information Technology, Vadodara}
+  \end{center}
+
+  \vspace{0.08cm}
+
+  \begin{center}
+  \renewcommand{\arraystretch}{0.95}
+  \setlength{\tabcolsep}{11pt}
+  \footnotesize
+  \begin{tabular}{c|l|c}
+    \rowcolor{navyDeep}
+    \textcolor{white}{\textbf{Group}} & \textcolor{white}{\textbf{Name}} & \textcolor{white}{\textbf{Roll Number}} \\
+    \hline
+    \multirow{4}{*}{\cellcolor{paperGrey}\large\bfseries 24}
+& \cellcolor{paperGrey}Hasini Reddy
+& \cellcolor{paperGrey}202311040 \\
+
+& \cellcolor{paperGrey}Mrunal Nikam
+& \cellcolor{paperGrey}202311053 \\
+
+& \cellcolor{paperGrey}Akshit Kumar
+& \cellcolor{paperGrey}202311059 \\
+
+& \cellcolor{paperGrey}Bhargavi Piridi
+& \cellcolor{paperGrey}202311062 \\
+  \end{tabular}
+  \end{center}
+\end{frame}
+
+% ===================================================================
+% SLIDE 2 -- Introduction
+% ===================================================================
+\begin{frame}{Introduction}
+  \vfill
+  \small
+  \begin{itemize}\setlength{\itemsep}{8pt}
+    \item Modern software teams work in \textbf{Agile and Scrum} cycles --- effort is divided into
+          short, time-boxed \textit{sprints} rather than one long delivery phase.
+    \item Lightweight tools such as Trello, and even enterprise suites such as Jira, are
+          fundamentally \textbf{descriptive}: they record what has already happened. A burndown
+          chart confirms a team is behind only once it \textit{is} behind.
+    \item Three blind spots recur in practice --- work \textbf{blocked} by unfinished dependencies is
+          discovered late, tasks \textbf{added mid-sprint} quietly inflate the commitment, and the
+          same \textbf{estimation errors} repeat every sprint because nothing measures them.
+    \item This project develops a \textbf{predictive sprint management tool}: it builds on a
+          conventional Kanban board, then adds a dependency-aware critical path, scope-creep
+          detection, estimation calibration, and a probabilistic completion forecast --- shifting the
+          question from \textit{``where are we?''} to \textbf{``will we make it?''}
+  \end{itemize}
+  \vfill
+\end{frame}
+
+% ===================================================================
+% SLIDE 3 -- Industry Problem
+% ===================================================================
+\begin{frame}{Industry / Research Problem}
+  \small
+  \begin{block}{The Gap}
+    Sprint tools measure the past accurately, but say nothing reliable about the future.
+  \end{block}
+  \vspace{0.08cm}
+  \begin{columns}[t]
+    \column{0.47\textwidth}
+      \textbf{\color{navyDeep} What current tools do}
+      \begin{itemize}\setlength{\itemsep}{2pt}
+        \item Report progress only after the fact
+        \item Treat every task as independent
+        \item Compare against no fixed baseline
+        \item Never measure estimation error
+      \end{itemize}
+    \column{0.47\textwidth}
+      \textbf{\color{navyDeep} What teams pay for it}
+      \begin{itemize}\setlength{\itemsep}{2pt}
+        \item Deadlines missed without early warning
+        \item Blocked work found only when picked up
+        \item Sprints silently over-committed
+        \item The same mis-estimates repeat each sprint
+      \end{itemize}
+  \end{columns}
+  \vspace{0.1cm}
+  \begin{alertblock}{Resulting Need}
+    \footnotesize A sprint tool that keeps the simplicity of a Kanban board, yet models \textbf{dependencies},
+    holds a \textbf{commitment baseline}, learns from \textbf{past accuracy}, and reports delivery
+    confidence as a \textbf{probability} while the sprint is still running.
+  \end{alertblock}
+\end{frame}
+
+% ===================================================================
+% SLIDE 4 -- Objectives
+% ===================================================================
+\begin{frame}{Objectives}
+  \vfill
+  \small
+  \begin{itemize}\setlength{\itemsep}{7pt}
+    \item Provide the \textbf{execution foundation}: a Kanban board with drag-and-drop across
+          \textit{Backlog}, \textit{To~Do}, \textit{In~Progress}, \textit{Done}; time-boxed sprints;
+          and secure, real-time multi-user access.
+    \item Model \textbf{task dependencies} as a directed graph and compute the \textbf{critical
+          path}, so the tasks that actually govern the sprint end date are visible.
+    \item Capture a \textbf{sprint commitment baseline} at sprint start and detect \textbf{scope
+          creep} --- work added, removed or re-estimated after the sprint began.
+    \item Track \textbf{estimation accuracy} by comparing estimated against actual effort, and derive
+          a per-team \textbf{velocity} with its historical error.
+    \item Generate a \textbf{probabilistic completion forecast} by Monte Carlo simulation over past
+          velocity, reporting the likelihood of finishing by the sprint end date.
+    \item Maintain a \textbf{risk register} linked to tasks, scoring each risk by probability and
+          impact to rank what threatens delivery most.
+  \end{itemize}
+  \vfill
+\end{frame}
+
+% ===================================================================
+% SLIDE 5 -- Aim
+% ===================================================================
+\begin{frame}{Aim of the Project}
+  \vfill
+  \panel[0.90]{\centering\large\itshape
+  ``To design and develop a lightweight, web-based sprint management tool that models task
+  dependencies, measures scope creep and estimation accuracy, and forecasts delivery risk
+  probabilistically --- so that small software teams learn a sprint is at risk while there is still
+  time to act.''}
+  \vspace{0.7cm}
+  \begin{center}
+    {\large\color{navyDeep} In one line: \textbf{not a report card, but an early warning system.}}
+  \end{center}
+  \vfill
+\end{frame}
+
+% ===================================================================
+% SLIDE 6 -- Proposed System Flow  (redesigned)
+% ===================================================================
+\begin{frame}{Proposed System Flow}
+  \vspace{-0.1cm}
+  \begin{center}
+  \begin{tikzpicture}[
+      font=\scriptsize,
+      node distance=0.34cm and 0.42cm,
+      tab/.style   = {rectangle, rounded corners=2pt, fill=navyDeep, text=white,
+                      minimum width=1.45cm, minimum height=0.82cm, align=center,
+                      font=\scriptsize\bfseries},
+      box/.style   = {rectangle, rounded corners=2pt, draw=navyMid, line width=0.6pt,
+                      fill=white, minimum width=2.85cm, minimum height=0.82cm,
+                      align=center, text width=2.7cm, inner sep=2pt},
+      kan/.style   = {rectangle, rounded corners=2pt, draw=tealAccent, line width=0.6pt,
+                      fill=tealAccent!12, minimum width=1.95cm, minimum height=0.82cm,
+                      align=center, text width=1.85cm, inner sep=2pt},
+      pred/.style  = {rectangle, rounded corners=2pt, draw=rustAccent, line width=0.7pt,
+                      fill=rustAccent!10, minimum width=2.85cm, minimum height=0.82cm,
+                      align=center, text width=2.7cm, inner sep=2pt},
+      ar/.style    = {-{Stealth[length=2mm,width=1.6mm]}, line width=0.6pt, navyMid},
+      loop/.style  = {-{Stealth[length=2mm,width=1.6mm]}, line width=0.7pt, tealAccent, dashed}
+    ]
+
+    % ---------- Row 1 : SETUP ----------
+    \node[tab] (t1) {SETUP};
+    \node[box, right=of t1] (a1) {User Login\\ / Sign-up};
+    \node[box, right=of a1] (a2) {Create Project\\ \& Board};
+    \node[box, right=of a2] (a3) {Invite\\ Team Members};
+
+    % ---------- Row 2 : PLAN ----------
+    \node[tab, below=of t1] (t2) {PLAN};
+    \node[box, right=of t2] (b1) {Create Sprint\\ + Commitment Baseline};
+    \node[box, right=of b1] (b2) {Add Tasks,\\ Estimate Points};
+    \node[box, right=of b2] (b3) {Link Dependencies\\ (blocks / blocked by)};
+
+    % ---------- Row 3 : EXECUTE ----------
+    \node[tab, below=of t2] (t3) {EXECUTE};
+    \node[kan, right=of t3] (k1) {Backlog};
+    \node[kan, right=of k1] (k2) {To Do};
+    \node[kan, right=of k2] (k3) {In Progress};
+    \node[kan, right=of k3] (k4) {Done};
+
+    % ---------- Row 4 : PREDICT ----------
+    \node[tab, below=of t3] (t4) {PREDICT};
+    \node[pred, right=of t4] (c1) {Critical Path\\ \& Blocked Work};
+    \node[pred, right=of c1] (c2) {Scope-Creep\\ vs Baseline};
+    \node[pred, right=of c2] (c3) {Monte Carlo\\ Completion Forecast};
+
+    % ---------- Intra-row arrows ----------
+    \draw[ar] (a1) -- (a2);   \draw[ar] (a2) -- (a3);
+    \draw[ar] (b1) -- (b2);   \draw[ar] (b2) -- (b3);
+    \draw[ar] (k1) -- (k2);   \draw[ar] (k2) -- (k3);  \draw[ar] (k3) -- (k4);
+    \draw[ar] (c1) -- (c2);   \draw[ar] (c2) -- (c3);
+
+    % ---------- Phase-to-phase arrows (down the tab column) ----------
+    \draw[ar] (t1) -- (t2);
+    \draw[ar] (t2) -- (t3);
+    \draw[ar] (t3) -- (t4);
+
+    % ---------- Feedback loop : routed clear of every box ----------
+    \coordinate (below) at ($(c3.south)+(0,-0.42)$);
+    \coordinate (left)  at ($(t2.west)+(-0.55,0)$);
+    \draw[loop] (c3.south) -- (below) -| (left) -- (t2.west);
+    \node[tealAccent, font=\scriptsize\itshape, anchor=north]
+         at ($(below)+(-1.9,0.02)$) {next sprint, re-planned with calibrated velocity};
+
+    % ---------- Annotations ----------
+    \node[navyMid, font=\scriptsize\itshape, anchor=west]
+         at ($(k4.east)+(0.25,0)$) {drag \& drop};
+    \node[rustAccent, font=\scriptsize\itshape, anchor=west]
+         at ($(c3.east)+(0.25,0)$) {live};
+
+  \end{tikzpicture}
+  \end{center}
+
+  \vspace{0.1cm}
+  {\centering\footnotesize\color{navyMid}
+   The \textcolor{rustAccent}{\textbf{PREDICT}} layer runs continuously during the sprint, not at the
+   end --- estimation error measured here calibrates the next sprint's forecast.\par}
+\end{frame}
+
+% ===================================================================
+% SLIDE 7 -- Methodology
+% ===================================================================
+\begin{frame}{Methodology}
+  \small
+  The tool is built \textit{using} the very process it manages --- an iterative Agile/Scrum
+  development methodology:
+  \vspace{0.08cm}
+  \begin{enumerate}\setlength{\itemsep}{2pt}
+    \item \textbf{Requirement Analysis} --- capture user stories for the execution foundation
+          (boards, sprints, tasks) and for the predictive layer (dependencies, baseline, forecast).
+    \item \textbf{System Design} --- entity-relationship model extended with a task dependency
+          graph and an immutable sprint commitment snapshot.
+    \item \textbf{Sprint-wise Implementation} --- foundation first (auth $\rightarrow$ board
+          $\rightarrow$ drag-and-drop $\rightarrow$ sprints), then the predictive layer
+          (dependencies $\rightarrow$ critical path $\rightarrow$ scope creep $\rightarrow$ forecast).
+    \item \textbf{Algorithm Validation} --- verify the critical path against hand-worked CPM
+          examples, and check the Monte Carlo forecast converges over repeated runs.
+    \item \textbf{Testing} --- integration tests on REST endpoints, including cycle rejection in the
+          dependency graph; manual UI testing of drag-and-drop and access control.
+    \item \textbf{Review \& Deployment} --- demonstrate each sprint increment, then deploy the
+          containerised frontend, backend and database.
+  \end{enumerate}
+\end{frame}
+
+% ===================================================================
+% SLIDE 8 -- Technology Stack
+% ===================================================================
+\begin{frame}{Proposed Technology Stack}
+  \vspace{-0.05cm}
+  \begin{center}
+  \renewcommand{\arraystretch}{1.2}
+  \setlength{\tabcolsep}{10pt}
+  \small
+  \begin{tabular}{l|l}
+    \rowcolor{navyDeep}
+    \textcolor{white}{\textbf{Layer}} & \textcolor{white}{\textbf{Technology Chosen}} \\
+    \hline
+    \rowcolor{paperGrey} Frontend            & React.js with Tailwind CSS \\
+                         Drag-and-Drop       & \texttt{@dnd-kit} \\
+    \rowcolor{paperGrey} Backend             & Node.js with Express.js (REST API) \\
+                         Database            & MongoDB (flexible document schema) \\
+    \rowcolor{paperGrey} Authentication      & JSON Web Tokens (JWT) + bcrypt hashing \\
+                         Real-Time Updates   & Socket.io (live board synchronisation) \\
+    \rowcolor{paperGrey} \textbf{Critical Path}       & Topological sort + longest-path (CPM), custom \\
+                         \textbf{Forecasting}         & Monte Carlo simulation over historical velocity \\
+    \rowcolor{paperGrey} Charts \& Graphs    & Recharts (burndown, forecast bands, dependency view) \\
+                         Deployment          & Docker Compose (frontend, backend, database) \\
+  \end{tabular}
+  \end{center}
+  \vspace{0.08cm}
+  \begin{center}
+  \begin{minipage}{0.88\textwidth}
+    \footnotesize\color{navyMid}\centering
+    A standard MERN stack for rapid, well-documented development --- with the critical-path and
+    forecasting layers written from first principles rather than imported, so every algorithmic
+    decision is ours to justify.
+  \end{minipage}
+  \end{center}
+\end{frame}
+
+% ===================================================================
+% SLIDE 9 -- Implemented Features & Results
+% ===================================================================
+\begin{frame}{Implemented Features \& Results}
+  \vspace{-0.05cm}
+  {\footnotesize All five predictive features are implemented and running against a live MongoDB
+  database. Figures below are measured from the seeded demonstration project.\par}
+  \vspace{0.15cm}
+  \begin{center}
+  \renewcommand{\arraystretch}{1.25}
+  \setlength{\tabcolsep}{7pt}
+  \footnotesize
+  \begin{tabular}{l|l|l}
+    \rowcolor{navyDeep}
+    \textcolor{white}{\textbf{Feature}} &
+    \textcolor{white}{\textbf{Technique}} &
+    \textcolor{white}{\textbf{Measured Result}} \\
+    \hline
+    \rowcolor{paperGrey} Critical path        & Topological sort + longest path & 13-point chain, zero float \\
+                         Blocked-work alerts  & Dependency graph traversal      & 2 tasks blocked, flagged early \\
+    \rowcolor{paperGrey} Scope-creep detection& Commitment baseline diff        & 34 $\rightarrow$ 42 pts (\textbf{+24\%}) \\
+                         Delivery forecast    & Monte Carlo, 5{,}000 trials     & \textbf{89\%} on time (p85 = 7 days) \\
+    \rowcolor{paperGrey} Estimation accuracy  & MAPE + bias ratio               & 1.3$\times$ --- flagged optimistic \\
+                         Risk register        & Probability $\times$ impact (1--5) & 4 risks, top exposure 16/25 \\
+  \end{tabular}
+  \end{center}
+  \vspace{0.15cm}
+  \begin{alertblock}{Validation}
+    \footnotesize \textbf{37 of 37 automated tests pass}, including a hand-worked CPM example checked
+    against textbook float values, and rejection of circular dependencies --- attempting to link
+    ATM-1 $\rightarrow$ ATM-3 is refused because \textit{``ATM-3 already depends on ATM-1''}.
+  \end{alertblock}
+\end{frame}
+
+% ===================================================================
+% SLIDE 10 -- References
+% ===================================================================
+\begin{frame}{References}
+  \small
+  \begin{enumerate}\setlength{\itemsep}{2pt}
+    \item I. Sommerville, \textit{Software Engineering}, 10th ed. Pearson Education, 2015.
+    \item R. S. Pressman and B. R. Maxim, \textit{Software Engineering: A Practitioner's Approach},
+          8th ed. McGraw-Hill, 2014.
+    \item Project Management Institute, \textit{A Guide to the Project Management Body of Knowledge
+          (PMBOK Guide)}, 7th ed. PMI, 2021.
+    \item K. Schwaber and J. Sutherland, \textit{The Scrum Guide}, Scrum.org, 2020.
+    \item J. E. Kelley and M. R. Walker, ``Critical-Path Planning and Scheduling,'' in
+          \textit{Proc. Eastern Joint Computer Conference}, 1959, pp. 160--173.
+    \item T. Magennis, \textit{Forecasting and Simulating Software Development Projects:
+          Effective Modeling of Kanban and Scrum Projects using Monte Carlo Simulation}, 2011.
+    \item Agile Alliance, \textit{Manifesto for Agile Software Development}, 2001.
+    \item Meta Platforms Inc., \textit{React Documentation}. [Online]. Available: react.dev
+    \item MongoDB Inc., \textit{MongoDB Manual}. [Online]. Available: docs.mongodb.com
+  \end{enumerate}
+\end{frame}
+
+% ===================================================================
+% SLIDE 11 -- Thank You
+% ===================================================================
+\begin{frame}[plain]
+  \vfill
+  \begin{center}
+    {\color{tealAccent}\rule{0.55\textwidth}{1pt}}\\[16pt]
+    {\Huge\bfseries\color{navyDeep} Thank You}\\[14pt]
+    {\large\color{navyMid} Questions \& Discussion}\\[16pt]
+    {\color{tealAccent}\rule{0.55\textwidth}{1pt}}\\[20pt]
+    {\footnotesize\color{navyMid}
+     Group 24 \ \textbullet\ \ Mrunal Nikam \ \textbullet\ \ Bhargavi Piridi \ \textbullet\ \ Akshit Kumar \ \textbullet\ \ Hasini Reddy\\
+     Department of Computer Science \& Engineering, IIIT Vadodara}
+  \end{center}
+  \vfill
+\end{frame}
+
+\end{document}
