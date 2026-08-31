@@ -95,12 +95,19 @@ jobs:
         with:
           node-version: 22
 
-      # Advisories below "high" are reported but do not fail the build, so a
-      # transitive low-severity notice cannot block an unrelated change.
-      - name: Audit server dependencies
-        working-directory: server
-        run: npm audit --audit-level=high
+      # Two passes, because the two questions are different.
+      #
+      # Runtime dependencies ship to users, so any moderate-or-worse advisory
+      # there fails the build. Build tooling never reaches production — a dev
+      # server advisory is worth knowing about but must not block a release,
+      # so the full audit is reported without failing.
+      - name: Audit runtime dependencies (blocking)
+        run: |
+          npm audit --omit=dev --audit-level=moderate --prefix server
+          npm audit --omit=dev --audit-level=moderate --prefix client
 
-      - name: Audit client dependencies
-        working-directory: client
-        run: npm audit --audit-level=high
+      - name: Audit build tooling (advisory only)
+        continue-on-error: true
+        run: |
+          npm audit --audit-level=high --prefix server
+          npm audit --audit-level=high --prefix client
