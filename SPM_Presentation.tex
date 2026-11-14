@@ -14,14 +14,12 @@
 \usetheme{default}
 \usefonttheme{professionalfonts}
 
-% =====================================================================
-%  COLOUR PALETTE  --  deep wine + brick + warm gold accent (no navy/blue)
-% =====================================================================
-\definecolor{navyDeep}{RGB}{110,45,58}      % headers, footer (lighter wine)
-\definecolor{navyMid}{RGB}{168,78,86}       % block titles, table headers (lighter brick)
-\definecolor{tealAccent}{RGB}{212,166,88}   % bullets, rules, highlights (warm gold)
-\definecolor{rustAccent}{RGB}{52,142,126}   % alert / emphasis (lighter forest teal)
-\definecolor{paperGrey}{RGB}{247,243,238}  % block bodies (warm off-white)
+% ---------------- COLOUR PALETTE ----------------
+\definecolor{navyDeep}{RGB}{110,45,58}
+\definecolor{navyMid}{RGB}{168,78,86}
+\definecolor{tealAccent}{RGB}{212,166,88}
+\definecolor{rustAccent}{RGB}{52,142,126}
+\definecolor{paperGrey}{RGB}{247,243,238}
 \definecolor{lineGrey}{RGB}{214,204,198}
 
 \setbeamercolor{structure}{fg=navyMid}
@@ -34,7 +32,6 @@
 \setbeamercolor{block body alerted}{bg=rustAccent!8, fg=black}
 \setbeamercolor{caption name}{fg=navyMid}
 
-% ---- Frame title: solid navy bar with a teal underline -------------
 \setbeamertemplate{frametitle}{%
   \nointerlineskip%
   \begin{beamercolorbox}[wd=\paperwidth,ht=3.1ex,dp=1.5ex,leftskip=0.55cm]{frametitle}%
@@ -48,7 +45,6 @@
 }
 \setbeamerfont{frametitle}{series=\bfseries,size=\large}
 
-% ---- Footer: three zones, all white-on-navy for full legibility ----
 \setbeamercolor{footL}{bg=navyDeep, fg=white}
 \setbeamercolor{footC}{bg=navyMid,  fg=white}
 \setbeamercolor{footR}{bg=navyDeep, fg=white}
@@ -57,7 +53,7 @@
   \leavevmode%
   \hbox{%
     \begin{beamercolorbox}[wd=.30\paperwidth,ht=3.0ex,dp=1.5ex,left]{footL}%
-      \hspace*{0.55cm}\usebeamerfont{footline}\scriptsize Group 24 \textbullet\ CSE
+      \hspace*{0.55cm}\usebeamerfont{footline}\scriptsize CSE, IIIT Vadodara
     \end{beamercolorbox}%
     \begin{beamercolorbox}[wd=.50\paperwidth,ht=3.0ex,dp=1.5ex,center]{footC}%
       \usebeamerfont{footline}\scriptsize Predictive Sprint Planning \& Delivery Risk Tool
@@ -74,11 +70,10 @@
 \setbeamertemplate{itemize subitem}{\color{navyMid}\textendash}
 \setbeamertemplate{enumerate item}{\color{white}\colorbox{navyMid}{\footnotesize\insertenumlabel}}
 \setbeamertemplate{blocks}[rounded][shadow=false]
-
 \setbeamersize{text margin left=0.75cm, text margin right=0.75cm}
 \hypersetup{colorlinks=true, linkcolor=navyMid, urlcolor=navyMid}
 
-% ---- Helper: a centred, non-overflowing ROUNDED highlight panel -----
+% ---------------- HELPERS ----------------
 \newcommand{\panel}[2][0.86]{%
   \begin{center}%
   \begin{tikzpicture}
@@ -88,376 +83,507 @@
   \end{center}%
 }
 
+% Screenshot: shows image if file exists, else labelled placeholder
+\newcommand{\shot}[3][0.95]{%
+  \IfFileExists{#2}{%
+    \includegraphics[width=#1\linewidth,height=0.52\textheight,keepaspectratio]{#2}}{%
+    \fcolorbox{lineGrey}{paperGrey}{\parbox[c][0.42\textheight][c]{#1\linewidth}%
+      {\centering\color{navyMid}\footnotesize Screenshot:\\ #3}}}}
+
+\tikzset{
+  box/.style={draw=navyMid, fill=paperGrey, rounded corners=4pt, align=center,
+              minimum height=0.95cm, inner sep=4pt, font=\footnotesize},
+  hot/.style={box, fill=navyMid, text=white, draw=navyDeep},
+  gold/.style={box, fill=tealAccent!35, draw=tealAccent},
+  arr/.style={-{Stealth[length=2.2mm]}, thick, color=navyDeep},
+  lab/.style={font=\scriptsize\itshape, color=navyDeep}
+}
+
 \title{Predictive Sprint Planning \& Delivery Risk Tool}
-\author{Group 24}
+\subtitle{Software Project Management -- Project Presentation}
+\author{Mrunal Nikam \textbullet\ Akshit Kumar \textbullet\ Bhargavi Piridi}
+\institute{Department of Computer Science \& Engineering\\
+  Indian Institute of Information Technology, Vadodara}
 \date{2026}
 
 \begin{document}
 
-% ===================================================================
-% SLIDE 1 -- Title
-% ===================================================================
+% =====================================================================
+% TITLE SLIDE
+% =====================================================================
 \begin{frame}[plain]
-  \vspace{-0.15cm}
-  \begin{center}
-    {\Large\bfseries\color{navyDeep} Predictive Sprint Planning \& Delivery Risk Tool}\\[2pt]
-    {\color{tealAccent}\rule{0.82\textwidth}{1pt}}\\[2pt]
-    {\small\itshape\color{navyMid} A Dependency-Aware Sprint Forecasting System for Small Development Teams}\\[2pt]
-
-  \end{center}
-
-  \vspace{0.08cm}
-
-  \panel[0.95]{\footnotesize\textbf{Problem Statement (Problem 39).}\; Small development teams can see what
-  they have completed, but not whether they will finish on time. Existing tools report progress after the
-  fact, ignore dependencies between tasks, and silently absorb work added mid-sprint --- so delays surface
-  only once they have already happened.}
-
-  \vspace{0.08cm}
-
-  \begin{center}
-    {\footnotesize Software Project Management \ \textbullet\ \ Computer Science \& Engineering\\
-    Indian Institute of Information Technology, Vadodara}
-  \end{center}
-
-  \vspace{0.08cm}
-
-  \begin{center}
-  \renewcommand{\arraystretch}{0.95}
-  \setlength{\tabcolsep}{11pt}
-  \footnotesize
-  \begin{tabular}{c|l|c}
-    \rowcolor{navyDeep}
-    \textcolor{white}{\textbf{Group}} & \textcolor{white}{\textbf{Name}} & \textcolor{white}{\textbf{Roll Number}} \\
-    \hline
-    \multirow{4}{*}{\cellcolor{paperGrey}\large\bfseries 24}
-& \cellcolor{paperGrey}Hasini Reddy
-& \cellcolor{paperGrey}202311040 \\
-
-& \cellcolor{paperGrey}Mrunal Nikam
-& \cellcolor{paperGrey}202311053 \\
-
-& \cellcolor{paperGrey}Akshit Kumar
-& \cellcolor{paperGrey}202311059 \\
-
-& \cellcolor{paperGrey}Bhargavi Piridi
-& \cellcolor{paperGrey}202311062 \\
-  \end{tabular}
-  \end{center}
-\end{frame}
-
-% ===================================================================
-% SLIDE 2 -- Introduction
-% ===================================================================
-\begin{frame}{Introduction}
-  \vfill
-  \small
-  \begin{itemize}\setlength{\itemsep}{8pt}
-    \item Modern software teams work in \textbf{Agile and Scrum} cycles --- effort is divided into
-          short, time-boxed \textit{sprints} rather than one long delivery phase.
-    \item Lightweight tools such as Trello, and even enterprise suites such as Jira, are
-          fundamentally \textbf{descriptive}: they record what has already happened. A burndown
-          chart confirms a team is behind only once it \textit{is} behind.
-    \item Three blind spots recur in practice --- work \textbf{blocked} by unfinished dependencies is
-          discovered late, tasks \textbf{added mid-sprint} quietly inflate the commitment, and the
-          same \textbf{estimation errors} repeat every sprint because nothing measures them.
-    \item This project develops a \textbf{predictive sprint management tool}: it builds on a
-          conventional Kanban board, then adds a dependency-aware critical path, scope-creep
-          detection, estimation calibration, and a probabilistic completion forecast --- shifting the
-          question from \textit{``where are we?''} to \textbf{``will we make it?''}
-  \end{itemize}
-  \vfill
-\end{frame}
-
-% ===================================================================
-% SLIDE 3 -- Industry Problem
-% ===================================================================
-\begin{frame}{Industry / Research Problem}
-  \small
-  \begin{block}{The Gap}
-    Sprint tools measure the past accurately, but say nothing reliable about the future.
-  \end{block}
-  \vspace{0.08cm}
-  \begin{columns}[t]
-    \column{0.47\textwidth}
-      \textbf{\color{navyDeep} What current tools do}
-      \begin{itemize}\setlength{\itemsep}{2pt}
-        \item Report progress only after the fact
-        \item Treat every task as independent
-        \item Compare against no fixed baseline
-        \item Never measure estimation error
-      \end{itemize}
-    \column{0.47\textwidth}
-      \textbf{\color{navyDeep} What teams pay for it}
-      \begin{itemize}\setlength{\itemsep}{2pt}
-        \item Deadlines missed without early warning
-        \item Blocked work found only when picked up
-        \item Sprints silently over-committed
-        \item The same mis-estimates repeat each sprint
-      \end{itemize}
-  \end{columns}
-  \vspace{0.1cm}
-  \begin{alertblock}{Resulting Need}
-    \footnotesize A sprint tool that keeps the simplicity of a Kanban board, yet models \textbf{dependencies},
-    holds a \textbf{commitment baseline}, learns from \textbf{past accuracy}, and reports delivery
-    confidence as a \textbf{probability} while the sprint is still running.
-  \end{alertblock}
-\end{frame}
-
-% ===================================================================
-% SLIDE 4 -- Objectives
-% ===================================================================
-\begin{frame}{Objectives}
-  \vfill
-  \small
-  \begin{itemize}\setlength{\itemsep}{7pt}
-    \item Provide the \textbf{execution foundation}: a Kanban board with drag-and-drop across
-          \textit{Backlog}, \textit{To~Do}, \textit{In~Progress}, \textit{Done}; time-boxed sprints;
-          and secure, real-time multi-user access.
-    \item Model \textbf{task dependencies} as a directed graph and compute the \textbf{critical
-          path}, so the tasks that actually govern the sprint end date are visible.
-    \item Capture a \textbf{sprint commitment baseline} at sprint start and detect \textbf{scope
-          creep} --- work added, removed or re-estimated after the sprint began.
-    \item Track \textbf{estimation accuracy} by comparing estimated against actual effort, and derive
-          a per-team \textbf{velocity} with its historical error.
-    \item Generate a \textbf{probabilistic completion forecast} by Monte Carlo simulation over past
-          velocity, reporting the likelihood of finishing by the sprint end date.
-    \item Maintain a \textbf{risk register} linked to tasks, scoring each risk by probability and
-          impact to rank what threatens delivery most.
-  \end{itemize}
-  \vfill
-\end{frame}
-
-% ===================================================================
-% SLIDE 5 -- Aim
-% ===================================================================
-\begin{frame}{Aim of the Project}
-  \vfill
-  \panel[0.90]{\centering\large\itshape
-  ``To design and develop a lightweight, web-based sprint management tool that models task
-  dependencies, measures scope creep and estimation accuracy, and forecasts delivery risk
-  probabilistically --- so that small software teams learn a sprint is at risk while there is still
-  time to act.''}
-  \vspace{0.7cm}
-  \begin{center}
-    {\large\color{navyDeep} In one line: \textbf{not a report card, but an early warning system.}}
-  \end{center}
-  \vfill
-\end{frame}
-
-% ===================================================================
-% SLIDE 6 -- Proposed System Flow  (redesigned)
-% ===================================================================
-\begin{frame}{Proposed System Flow}
-  \vspace{-0.1cm}
-  \begin{center}
-  \begin{tikzpicture}[
-      font=\scriptsize,
-      node distance=0.34cm and 0.42cm,
-      tab/.style   = {rectangle, rounded corners=2pt, fill=navyDeep, text=white,
-                      minimum width=1.45cm, minimum height=0.82cm, align=center,
-                      font=\scriptsize\bfseries},
-      box/.style   = {rectangle, rounded corners=2pt, draw=navyMid, line width=0.6pt,
-                      fill=white, minimum width=2.85cm, minimum height=0.82cm,
-                      align=center, text width=2.7cm, inner sep=2pt},
-      kan/.style   = {rectangle, rounded corners=2pt, draw=tealAccent, line width=0.6pt,
-                      fill=tealAccent!12, minimum width=1.95cm, minimum height=0.82cm,
-                      align=center, text width=1.85cm, inner sep=2pt},
-      pred/.style  = {rectangle, rounded corners=2pt, draw=rustAccent, line width=0.7pt,
-                      fill=rustAccent!10, minimum width=2.85cm, minimum height=0.82cm,
-                      align=center, text width=2.7cm, inner sep=2pt},
-      ar/.style    = {-{Stealth[length=2mm,width=1.6mm]}, line width=0.6pt, navyMid},
-      loop/.style  = {-{Stealth[length=2mm,width=1.6mm]}, line width=0.7pt, tealAccent, dashed}
-    ]
-
-    % ---------- Row 1 : SETUP ----------
-    \node[tab] (t1) {SETUP};
-    \node[box, right=of t1] (a1) {User Login\\ / Sign-up};
-    \node[box, right=of a1] (a2) {Create Project\\ \& Board};
-    \node[box, right=of a2] (a3) {Invite\\ Team Members};
-
-    % ---------- Row 2 : PLAN ----------
-    \node[tab, below=of t1] (t2) {PLAN};
-    \node[box, right=of t2] (b1) {Create Sprint\\ + Commitment Baseline};
-    \node[box, right=of b1] (b2) {Add Tasks,\\ Estimate Points};
-    \node[box, right=of b2] (b3) {Link Dependencies\\ (blocks / blocked by)};
-
-    % ---------- Row 3 : EXECUTE ----------
-    \node[tab, below=of t2] (t3) {EXECUTE};
-    \node[kan, right=of t3] (k1) {Backlog};
-    \node[kan, right=of k1] (k2) {To Do};
-    \node[kan, right=of k2] (k3) {In Progress};
-    \node[kan, right=of k3] (k4) {Done};
-
-    % ---------- Row 4 : PREDICT ----------
-    \node[tab, below=of t3] (t4) {PREDICT};
-    \node[pred, right=of t4] (c1) {Critical Path\\ \& Blocked Work};
-    \node[pred, right=of c1] (c2) {Scope-Creep\\ vs Baseline};
-    \node[pred, right=of c2] (c3) {Monte Carlo\\ Completion Forecast};
-
-    % ---------- Intra-row arrows ----------
-    \draw[ar] (a1) -- (a2);   \draw[ar] (a2) -- (a3);
-    \draw[ar] (b1) -- (b2);   \draw[ar] (b2) -- (b3);
-    \draw[ar] (k1) -- (k2);   \draw[ar] (k2) -- (k3);  \draw[ar] (k3) -- (k4);
-    \draw[ar] (c1) -- (c2);   \draw[ar] (c2) -- (c3);
-
-    % ---------- Phase-to-phase arrows (down the tab column) ----------
-    \draw[ar] (t1) -- (t2);
-    \draw[ar] (t2) -- (t3);
-    \draw[ar] (t3) -- (t4);
-
-    % ---------- Feedback loop : routed clear of every box ----------
-    \coordinate (below) at ($(c3.south)+(0,-0.42)$);
-    \coordinate (left)  at ($(t2.west)+(-0.55,0)$);
-    \draw[loop] (c3.south) -- (below) -| (left) -- (t2.west);
-    \node[tealAccent, font=\scriptsize\itshape, anchor=north]
-         at ($(below)+(-1.9,0.02)$) {next sprint, re-planned with calibrated velocity};
-
-    % ---------- Annotations ----------
-    \node[navyMid, font=\scriptsize\itshape, anchor=west]
-         at ($(k4.east)+(0.25,0)$) {drag \& drop};
-    \node[rustAccent, font=\scriptsize\itshape, anchor=west]
-         at ($(c3.east)+(0.25,0)$) {live};
-
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[navyDeep] (current page.south west) rectangle (current page.north east);
+    \fill[tealAccent] ([yshift=-1.1cm]current page.north west) rectangle
+                      ([yshift=-1.18cm]current page.north east);
+    \fill[tealAccent] ([yshift=1.0cm]current page.south west) rectangle
+                      ([yshift=1.08cm]current page.south east);
   \end{tikzpicture}
-  \end{center}
-
-  \vspace{0.1cm}
-  {\centering\footnotesize\color{navyMid}
-   The \textcolor{rustAccent}{\textbf{PREDICT}} layer runs continuously during the sprint, not at the
-   end --- estimation error measured here calibrates the next sprint's forecast.\par}
-\end{frame}
-
-% ===================================================================
-% SLIDE 7 -- Methodology
-% ===================================================================
-\begin{frame}{Methodology}
-  \small
-  The tool is built \textit{using} the very process it manages --- an iterative Agile/Scrum
-  development methodology:
-  \vspace{0.08cm}
-  \begin{enumerate}\setlength{\itemsep}{2pt}
-    \item \textbf{Requirement Analysis} --- capture user stories for the execution foundation
-          (boards, sprints, tasks) and for the predictive layer (dependencies, baseline, forecast).
-    \item \textbf{System Design} --- entity-relationship model extended with a task dependency
-          graph and an immutable sprint commitment snapshot.
-    \item \textbf{Sprint-wise Implementation} --- foundation first (auth $\rightarrow$ board
-          $\rightarrow$ drag-and-drop $\rightarrow$ sprints), then the predictive layer
-          (dependencies $\rightarrow$ critical path $\rightarrow$ scope creep $\rightarrow$ forecast).
-    \item \textbf{Algorithm Validation} --- verify the critical path against hand-worked CPM
-          examples, and check the Monte Carlo forecast converges over repeated runs.
-    \item \textbf{Testing} --- integration tests on REST endpoints, including cycle rejection in the
-          dependency graph; manual UI testing of drag-and-drop and access control.
-    \item \textbf{Review \& Deployment} --- demonstrate each sprint increment, then deploy the
-          containerised frontend, backend and database.
-  \end{enumerate}
-\end{frame}
-
-% ===================================================================
-% SLIDE 8 -- Technology Stack
-% ===================================================================
-\begin{frame}{Proposed Technology Stack}
-  \vspace{-0.05cm}
-  \begin{center}
-  \renewcommand{\arraystretch}{1.2}
-  \setlength{\tabcolsep}{10pt}
-  \small
-  \begin{tabular}{l|l}
-    \rowcolor{navyDeep}
-    \textcolor{white}{\textbf{Layer}} & \textcolor{white}{\textbf{Technology Chosen}} \\
-    \hline
-    \rowcolor{paperGrey} Frontend            & React.js with Tailwind CSS \\
-                         Drag-and-Drop       & \texttt{@dnd-kit} \\
-    \rowcolor{paperGrey} Backend             & Node.js with Express.js (REST API) \\
-                         Database            & MongoDB (flexible document schema) \\
-    \rowcolor{paperGrey} Authentication      & JSON Web Tokens (JWT) + bcrypt hashing \\
-                         Real-Time Updates   & Socket.io (live board synchronisation) \\
-    \rowcolor{paperGrey} \textbf{Critical Path}       & Topological sort + longest-path (CPM), custom \\
-                         \textbf{Forecasting}         & Monte Carlo simulation over historical velocity \\
-    \rowcolor{paperGrey} Charts \& Graphs    & Recharts (burndown, forecast bands, dependency view) \\
-                         Deployment          & Docker Compose (frontend, backend, database) \\
-  \end{tabular}
-  \end{center}
-  \vspace{0.08cm}
-  \begin{center}
-  \begin{minipage}{0.88\textwidth}
-    \footnotesize\color{navyMid}\centering
-    A standard MERN stack for rapid, well-documented development --- with the critical-path and
-    forecasting layers written from first principles rather than imported, so every algorithmic
-    decision is ours to justify.
-  \end{minipage}
-  \end{center}
-\end{frame}
-
-% ===================================================================
-% SLIDE 9 -- Implemented Features & Results
-% ===================================================================
-\begin{frame}{Implemented Features \& Results}
-  \vspace{-0.05cm}
-  {\footnotesize All five predictive features are implemented and running against a live MongoDB
-  database. Figures below are measured from the seeded demonstration project.\par}
-  \vspace{0.15cm}
-  \begin{center}
-  \renewcommand{\arraystretch}{1.25}
-  \setlength{\tabcolsep}{7pt}
-  \footnotesize
-  \begin{tabular}{l|l|l}
-    \rowcolor{navyDeep}
-    \textcolor{white}{\textbf{Feature}} &
-    \textcolor{white}{\textbf{Technique}} &
-    \textcolor{white}{\textbf{Measured Result}} \\
-    \hline
-    \rowcolor{paperGrey} Critical path        & Topological sort + longest path & 13-point chain, zero float \\
-                         Blocked-work alerts  & Dependency graph traversal      & 2 tasks blocked, flagged early \\
-    \rowcolor{paperGrey} Scope-creep detection& Commitment baseline diff        & 34 $\rightarrow$ 42 pts (\textbf{+24\%}) \\
-                         Delivery forecast    & Monte Carlo, 5{,}000 trials     & \textbf{89\%} on time (p85 = 7 days) \\
-    \rowcolor{paperGrey} Estimation accuracy  & MAPE + bias ratio               & 1.3$\times$ --- flagged optimistic \\
-                         Risk register        & Probability $\times$ impact (1--5) & 4 risks, top exposure 16/25 \\
-  \end{tabular}
-  \end{center}
-  \vspace{0.15cm}
-  \begin{alertblock}{Validation}
-    \footnotesize \textbf{37 of 37 automated tests pass}, including a hand-worked CPM example checked
-    against textbook float values, and rejection of circular dependencies --- attempting to link
-    ATM-1 $\rightarrow$ ATM-3 is refused because \textit{``ATM-3 already depends on ATM-1''}.
-  \end{alertblock}
-\end{frame}
-
-% ===================================================================
-% SLIDE 10 -- References
-% ===================================================================
-\begin{frame}{References}
-  \small
-  \begin{enumerate}\setlength{\itemsep}{2pt}
-    \item I. Sommerville, \textit{Software Engineering}, 10th ed. Pearson Education, 2015.
-    \item R. S. Pressman and B. R. Maxim, \textit{Software Engineering: A Practitioner's Approach},
-          8th ed. McGraw-Hill, 2014.
-    \item Project Management Institute, \textit{A Guide to the Project Management Body of Knowledge
-          (PMBOK Guide)}, 7th ed. PMI, 2021.
-    \item K. Schwaber and J. Sutherland, \textit{The Scrum Guide}, Scrum.org, 2020.
-    \item J. E. Kelley and M. R. Walker, ``Critical-Path Planning and Scheduling,'' in
-          \textit{Proc. Eastern Joint Computer Conference}, 1959, pp. 160--173.
-    \item T. Magennis, \textit{Forecasting and Simulating Software Development Projects:
-          Effective Modeling of Kanban and Scrum Projects using Monte Carlo Simulation}, 2011.
-    \item Agile Alliance, \textit{Manifesto for Agile Software Development}, 2001.
-    \item Meta Platforms Inc., \textit{React Documentation}. [Online]. Available: react.dev
-    \item MongoDB Inc., \textit{MongoDB Manual}. [Online]. Available: docs.mongodb.com
-  \end{enumerate}
-\end{frame}
-
-% ===================================================================
-% SLIDE 11 -- Thank You
-% ===================================================================
-\begin{frame}[plain]
   \vfill
   \begin{center}
-    {\color{tealAccent}\rule{0.55\textwidth}{1pt}}\\[16pt]
-    {\Huge\bfseries\color{navyDeep} Thank You}\\[14pt]
-    {\large\color{navyMid} Questions \& Discussion}\\[16pt]
-    {\color{tealAccent}\rule{0.55\textwidth}{1pt}}\\[20pt]
-    {\footnotesize\color{navyMid}
-     Group 24 \ \textbullet\ \ Mrunal Nikam \ \textbullet\ \ Bhargavi Piridi \ \textbullet\ \ Akshit Kumar \ \textbullet\ \ Hasini Reddy\\
-     Department of Computer Science \& Engineering, IIIT Vadodara}
+    {\color{tealAccent}\scriptsize\bfseries SOFTWARE PROJECT MANAGEMENT -- PROJECT PRESENTATION\par}
+    \vspace{0.4cm}
+    {\color{white}\LARGE\bfseries Predictive Sprint Planning\\[4pt]\& Delivery Risk Tool\par}
+    \vspace{0.3cm}
+    {\color{tealAccent}\normalsize A Kanban board with dependency-aware analysis\\
+    and probabilistic delivery forecasting\par}
+    \vspace{0.6cm}
+    \begin{tikzpicture}
+      \node[fill=navyMid, rounded corners=6pt, inner sep=8pt, text=white, align=center]{%
+        \small Mrunal Nikam (202311053) \quad Akshit Kumar (202311059) \quad Bhargavi Piridi (202311061)};
+    \end{tikzpicture}
+    \vspace{0.3cm}
+    {\color{white}\footnotesize Guide: \textbf{Dr.\ Karan Varma}\par}
+    {\color{white}\footnotesize Department of Computer Science \& Engineering,\
+      Indian Institute of Information Technology, Vadodara\par}
+  \end{center}
+  \vfill
+\end{frame}
+
+% =====================================================================
+% Q1 -- OBJECTIVE AND PROBLEM
+% =====================================================================
+\begin{frame}{Q1. Main Objective and Real-World Problem}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      \begin{block}{The problem}
+        Small development teams can see what they have \emph{completed}, but cannot
+        reliably predict whether a sprint will finish on time.
+      \end{block}
+      \vspace{0.1cm}
+      Three recurring blind spots:
+      \begin{itemize}
+        \item \textbf{Hidden dependencies} -- blocked work is discovered too late
+        \item \textbf{Unnoticed scope change} -- tasks added after sprint start go untracked
+        \item \textbf{Repeated estimation error} -- estimates are never compared with actuals
+      \end{itemize}
+      \vspace{0.2cm}
+      \begin{tikzpicture}
+        \node[fill=tealAccent!25, rounded corners=4pt, inner sep=6pt,
+              text width=0.9\textwidth, align=left, font=\footnotesize]{%
+          \textbf{Our answer:} not just ``where are we?'' but\\
+          \textbf{``will we finish on time?''}\ --- answered with a probability.};
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \begin{alertblock}{Our objective}
+        An \textbf{early-warning layer} on top of a familiar Kanban board that
+        turns sprint data into delivery risk \emph{before} the deadline, not after it.
+      \end{alertblock}
+      \vspace{0.25cm}
+      \textbf{What we built vs.\ existing tools:}
+      \vspace{0.1cm}
+
+      \footnotesize
+      \begin{tabular}{@{}lcc@{}}
+        \toprule
+        Feature & Jira & Ours \\ \midrule
+        Kanban board   & \checkmark & \checkmark \\
+        Critical Path  & \texttimes & \checkmark \\
+        Monte Carlo    & \texttimes & \checkmark \\
+        Scope creep    & \texttimes & \checkmark \\
+        Risk register  & plugin     & \checkmark \\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Q1. Core Features at a Glance}
+  \small
+  \begin{tabular}{@{}>{\bfseries\color{navyMid}}p{3.6cm}p{6.2cm}p{4.4cm}@{}}
+    \toprule
+    Feature & What it does & Implementation \\
+    \midrule
+    Kanban board & Drag-and-drop, filter by member, real-time sync & \texttt{Board.jsx}, \texttt{taskController.js} \\
+    Sprint planning & Create, activate, complete, delete sprints & \texttt{sprintController.js} \\
+    Dependency analysis & Cycle detection, blocked tasks, critical path, float & \texttt{criticalPath.js} \\
+    Delivery forecast & Probability and days to finish remaining work & \texttt{forecast.js} \\
+    Scope \& estimation & Commitment snapshot vs.\ current scope; estimate vs.\ actual & \texttt{scopeAnalysis.js} \\
+    Risk register & Probability $\times$ impact exposure score, 5$\times$5 heatmap & \texttt{Risk.js}, \texttt{Risks.jsx} \\
+    Activity \& comments & Full audit trail and task discussion & \texttt{Activity.js}, \texttt{Comment.js} \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+% =====================================================================
+% Q2 -- TECH STACK
+% =====================================================================
+\begin{frame}{Q2. Technology Stack}
+  \centering
+  \newcommand{\techcard}[5]{%
+    \node[draw=navyMid, fill=paperGrey, rounded corners=4pt, line width=0.6pt,
+          anchor=north west, minimum width=4.5cm, minimum height=1.85cm,
+          text width=4.2cm, align=left, inner sep=4pt] at (#1,#2)
+      {{\bfseries\color{navyDeep}#3}\\[1pt]{\footnotesize #4}\\[1pt]{\scriptsize\itshape\color{navyMid}#5}};
+    \fill[tealAccent] ([xshift=0.15cm,yshift=-0.02cm]#1,#2) rectangle +(0.9cm,-0.05cm);}
+  \begin{tikzpicture}
+    \techcard{0}{0}{Frontend}{React 18.3, Vite 8.3}{Single-page app and build tool}
+    \techcard{4.75}{0}{UI Layer}{Tailwind 3.4, Recharts 2.15, React Router 7}{Styling, charts, routing}
+    \techcard{9.5}{0}{Backend}{Node.js 22, Express 4.22}{REST API with layered structure}
+    \techcard{0}{-2.05}{Database}{MongoDB 7, Mongoose 8.24}{Users, projects, sprints, tasks, risks}
+    \techcard{4.75}{-2.05}{Real-time}{Socket.IO 4.8}{Live board updates per project room}
+    \techcard{9.5}{-2.05}{Auth}{jsonwebtoken 9, bcryptjs 2.4}{Bearer tokens, hashed passwords}
+    \techcard{0}{-4.1}{Validation}{Zod 4.6}{Schemas for every API request}
+    \techcard{4.75}{-4.1}{Testing}{node:test, Supertest, mongodb-memory-server}{77 tests, no real database needed}
+    \techcard{9.5}{-4.1}{DevOps}{Docker Compose, Nginx, GitHub Actions}{Run, serve, proxy; CI on Node 20 \& 22}
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Q2. Why This Stack?}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Technology choices and reasons}
+        \begin{itemize}
+          \item \textbf{React} -- component-based UI fits a complex, interactive board
+          \item \textbf{MongoDB} -- document store matches flexible task schemas with nested dependencies
+          \item \textbf{Socket.IO} -- project rooms broadcast drag events to all members live
+          \item \textbf{Plain JS services} -- CPM and Monte Carlo are pure functions, easy to unit-test
+          \item \textbf{Zod} -- every bad request is rejected before touching the database
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Engineering practices}
+        \begin{itemize}
+          \item REST-style JSON API
+          \item Route $\rightarrow$ controller $\rightarrow$ service $\rightarrow$ model layering
+          \item Optimistic UI + server reconciliation for drag-and-drop
+          \item Seeded random generator for repeatable forecasts
+          \item Automated CI on every push (GitHub Actions)
+          \item OpenAPI documentation at \texttt{/api/docs}
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+% Q3 -- ARCHITECTURE AND DATA FLOW
+% =====================================================================
+\begin{frame}{Q3. System Architecture}
+  \centering
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}
+    \node[hot,  minimum width=2.2cm] (spa) at (0,0)    {Browser\\React SPA};
+    \node[gold, minimum width=2.4cm] (ng)  at (3.9,0)  {Nginx\\static files + proxy};
+    \node[hot,  minimum width=2.6cm] (api) at (8.2,0)  {Express API\\+ Socket.IO};
+    \node[gold, minimum width=2.2cm] (db)  at (12.3,0) {MongoDB\\via Mongoose};
+
+    \draw[arr] (spa) -- node[lab, above] {HTTP / WS} (ng);
+    \draw[arr] (ng)  -- node[lab, above] {\texttt{/api}} node[lab, below] {\texttt{/socket.io}} (api);
+    \draw[arr] (api) -- node[lab, above] {queries} (db);
+
+    \node[box, minimum width=12cm] (svc) at (6.15,-2.0)
+      {Analytics Services: critical path \textbullet\ forecast \textbullet\ scope \textbullet\ workload \textbullet\ in-process cache};
+    \node[box, minimum width=12cm] (mw) at (6.15,-3.2)
+      {Middleware: JWT auth \textbullet\ membership check \textbullet\ Zod validation \textbullet\ rate limit \textbullet\ CORS \textbullet\ Helmet};
+
+    \draw[arr] (api.south) -- (api.south |- svc.north);
+    \draw[arr] (svc.south) -- (mw.north);
+
+    \node[lab, align=center] at (6.15,-4.1)
+      {Live updates: server emits Socket.IO event $\rightarrow$ project room $\rightarrow$ every member's board refreshes};
+  \end{tikzpicture}}
+\end{frame}
+
+\begin{frame}{Q3. Data Flow -- Login and Moving a Task}
+  \centering
+  {\small\bfseries\color{navyMid} (a) Login flow}\\[4pt]
+  \begin{tikzpicture}[node distance=0.52cm, font=\scriptsize]
+    \node[box] (a1) {Login page\\submits form};
+    \node[box, right=of a1] (a2) {Zod\\validation};
+    \node[box, right=of a2] (a3) {Find user,\\check bcrypt};
+    \node[box, right=of a3] (a4) {Sign\\JWT};
+    \node[hot, right=of a4] (a5) {Token in\\localStorage};
+    \node[box, right=of a5] (a6) {Bearer header\\every request};
+    \foreach \x/\y in {a1/a2,a2/a3,a3/a4,a4/a5,a5/a6} \draw[arr] (\x) -- (\y);
+  \end{tikzpicture}
+
+  \vspace{0.55cm}
+  {\small\bfseries\color{navyMid} (b) Moving a task on the Kanban board}\\[4pt]
+  \begin{tikzpicture}[node distance=0.52cm, font=\scriptsize]
+    \node[box] (b1) {Drag card\\(optimistic UI)};
+    \node[box, right=of b1] (b2) {PATCH \texttt{/move}\\auth + member};
+    \node[box, right=of b2] (b3) {Validate\\ordered IDs};
+    \node[hot, right=of b3] (b4) {Save via\\hooks + version};
+    \node[box, right=of b4] (b5) {Reorder\\other tasks};
+    \node[box, right=of b5] (b6) {Activity log +\\Socket.IO emit};
+    \foreach \x/\y in {b1/b2,b2/b3,b3/b4,b4/b5,b5/b6} \draw[arr] (\x) -- (\y);
+  \end{tikzpicture}
+
+  \vspace{0.4cm}
+  \panel[0.9]{\footnotesize\textbf{Key design decision:} the client sends the \emph{full ordered list} of card IDs in the destination column, not just one card's new index. This prevents ordering conflicts when two people drag simultaneously.}
+\end{frame}
+
+\begin{frame}{Q3. Data Flow -- Viewing a Sprint Forecast}
+  \centering
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[font=\footnotesize]
+    \node[box, minimum width=3.2cm] (c1) at (0,0)    {Insights page\\selects active sprint};
+    \node[box, minimum width=3.6cm] (c2) at (4.6,0)  {GET \texttt{/sprints/:id/health}};
+    \node[box, minimum width=3.4cm] (c3) at (9.2,0)  {Load sprint tasks\\+ completed history};
+    \node[hot, minimum width=3.4cm] (c4) at (13.6,0) {Run analytics\\CPM + MC + scope};
+
+    \node[box, minimum width=3.4cm] (c5) at (13.6,-2.2) {30-sec\\in-process cache};
+    \node[box, minimum width=3.4cm] (c6) at (9.2,-2.2)  {JSON response};
+    \node[gold, minimum width=6.4cm, text width=6cm] (c7) at (3.3,-2.2)
+      {UI panels: forecast gauge \textbullet\ critical path \textbullet\ blocked work \textbullet\ scope creep \textbullet\ burndown};
+
+    \draw[arr] (c1) -- (c2);
+    \draw[arr] (c2) -- (c3);
+    \draw[arr] (c3) -- (c4);
+    \draw[arr] (c4) -- (c5);
+    \draw[arr] (c5) -- (c6);
+    \draw[arr] (c6) -- (c7);
+
+    \node[lab] at (7.0,-3.5) {Request flows left-to-right on top; result flows right-to-left below};
+  \end{tikzpicture}}
+\end{frame}
+
+\begin{frame}{Q3. Data Model (7 Collections)}
+  \centering
+  \begin{tikzpicture}[font=\scriptsize]
+    \node[hot, minimum width=2.4cm] (proj) at (0,0)    {Project\\name, key, owner,\\members, task counter};
+    \node[box, minimum width=2.4cm] (user) at (-5.2,0) {User\\name, email,\\password hash};
+    \node[box, minimum width=2.4cm] (spr)  at (5.2,0)  {Sprint\\dates, status,\\commitment snapshot};
+    \node[hot, minimum width=2.6cm] (task) at (0,-2.6) {Task\\reference, status,\\points, dependsOn[ ],\\order, version};
+    \node[box, minimum width=2.4cm] (risk) at (-5.2,-2.6) {Risk\\probability $\times$ impact,\\related tasks};
+    \node[box, minimum width=2.4cm] (com)  at (5.2,-2.6) {Comment\\body, author,\\edited time};
+    \node[box, minimum width=2.4cm] (act)  at (0,-4.9)  {Activity\\action, actor, changes};
+
+    \draw[arr] (user) -- node[lab, above] {member of} (proj);
+    \draw[arr] (spr)  -- node[lab, above] {belongs to} (proj);
+    \draw[arr] (task) -- node[lab, right] {belongs to} (proj);
+    \draw[arr] (task) -- node[lab, above] {in sprint} (spr);
+    \draw[arr] (risk) -- node[lab, above] {refers to} (task);
+    \draw[arr] (com)  -- node[lab, above] {on} (task);
+    \draw[arr] (act)  -- node[lab, right] {about} (task);
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Q3. API Overview (all routes under \texttt{/api})}
+  \footnotesize
+  \begin{tabular}{@{}>{\bfseries\color{navyMid}}p{2.6cm}p{6.6cm}p{4.2cm}@{}}
+    \toprule
+    Area & Routes & Access \\
+    \midrule
+    Auth & \texttt{POST /auth/register}, \texttt{/login}, \texttt{GET /auth/me} & Public / token \\
+    Projects & CRUD + member add/remove & Member; owner for changes \\
+    Sprints & CRUD + \texttt{/burndown} & Project member \\
+    Tasks & CRUD, \texttt{/move}, dependency add/remove & Project member \\
+    Analytics & \texttt{/health}, \texttt{/critical-path}, \texttt{/forecast}, \texttt{/scope-creep}, \texttt{/estimation-accuracy}, \texttt{/workload} & Project member \\
+    Collaboration & Comments CRUD, activity log & Member; author for edits \\
+    Risks & CRUD under \texttt{/projects/:id/risks} & Project member \\
+    System & \texttt{/health}, \texttt{/openapi.json}, \texttt{/docs} & Public \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+% =====================================================================
+% ALGORITHMS
+% =====================================================================
+\begin{frame}{Analytics Engine -- How the Predictions Work}
+  \footnotesize
+  \begin{tabular}{@{}>{\bfseries\color{navyMid}}p{2.9cm}p{7.0cm}p{3.6cm}@{}}
+    \toprule
+    Algorithm & Plain-English behaviour & File \\
+    \midrule
+    Critical Path (CPM) & 3-colour DFS cycle check; Kahn's topological sort; forward and backward passes to get earliest/latest times and float; zero-float tasks form the critical chain & \texttt{criticalPath.js} \\[4pt]
+    Monte Carlo forecast & Resample team's historical daily output 5,000 times; count on-time finishes; seeded PRNG (Mulberry32) for reproducibility; reports P50/P85/P95 bands & \texttt{forecast.js} \\[4pt]
+    Scope-creep detection & Diff current task list against the commitment snapshot frozen at sprint activation; flag silent point re-estimation & \texttt{scopeAnalysis.js} \\[4pt]
+    Estimation accuracy & Compare estimated vs.\ actual story points on done tasks; compute bias ratio and suggest calibration multiplier & \texttt{scopeAnalysis.js} \\[4pt]
+    Workload analysis & Group sprint tasks by assignee: load, blocked, overdue, done & \texttt{teamAnalytics.js} \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+% =====================================================================
+% Q4 -- CHALLENGES
+% =====================================================================
+\begin{frame}{Q4. Technical Challenges and Solutions}
+  \footnotesize
+  \begin{tabular}{@{}>{\color{navyMid}}p{5.1cm}p{8.8cm}@{}}
+    \toprule
+    \textbf{Challenge} & \textbf{Solution} \\
+    \midrule
+    Duplicate task references on concurrent creation &
+      Atomic counter increment on Project + unique (project, reference) compound index \\
+    Dependency cycles break the CPM algorithm &
+      3-colour DFS detector; cycle-creating dependency rejected at the API with HTTP 400 \\
+    Board reordering skipped Mongoose save hooks &
+      Only the moved task goes through \texttt{.save()}; order updates to others use \texttt{bulkWrite} \\
+    Removed members kept receiving live events &
+      Socket users tracked per room; evicted on membership removal \\
+    Forecast was non-repeatable and ignored idle days &
+      Keep zero-output days in samples, count working days, use seeded Mulberry32 PRNG \\
+    API tests needed a real database &
+      \texttt{node:test} + Supertest + \texttt{mongodb-memory-server} -- no external DB required \\
+    \bottomrule
+  \end{tabular}
+  \vspace{0.2cm}
+  \panel[0.9]{\footnotesize Each challenge was reproduced in an isolated test, fixed, and covered by a regression test.}
+\end{frame}
+
+% =====================================================================
+% RESULTS
+% =====================================================================
+\begin{frame}{Results and Evidence}
+  \begin{columns}[T]
+    \begin{column}{0.46\textwidth}
+      \begin{block}{Automated tests (server)}
+        \Large\centering\textbf{77 / 77} \normalsize passing\\[2pt]
+        \footnotesize 10 suites, 0 failures.\\Covers analytics, auth, projects, tasks, comments, sprints, validation, concurrency, pagination, and socket eviction.
+      \end{block}
+      \begin{block}{Codebase size}
+        \footnotesize
+        \begin{tabular}{@{}lrr@{}}
+          Folder & Files & Lines \\ \midrule
+          \texttt{server/src}   & 39 & 3,787 \\
+          \texttt{server/tests} &  4 & 1,341 \\
+          \texttt{client/src}   & 21 & 3,003 \\
+        \end{tabular}
+      \end{block}
+    \end{column}
+    \begin{column}{0.50\textwidth}
+      \begin{block}{Forecast benchmark (Node v24.2.0)}
+        \footnotesize
+        \begin{tabular}{@{}rrr@{}}
+          \toprule
+          Trials & Points remaining & Median time \\ \midrule
+          1,000  & 40  & 0.59 ms \\
+          5,000  & 40  & 0.95 ms \\
+          5,000  & 200 & 1.90 ms \\
+          20,000 & 40  & 1.99 ms \\
+          50,000 & 40  & 5.66 ms \\
+          \bottomrule
+        \end{tabular}\\[4pt]
+        \scriptsize Production uses 5,000 trials --- sub-millisecond on typical sprints.\\
+        Seeded repeatability check: same inputs $\Rightarrow$ same forecast every time.
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+% APPLICATION SCREENSHOTS
+% =====================================================================
+\begin{frame}{Application Screens}
+  \begin{columns}[T]
+    \begin{column}{0.32\textwidth}\centering
+      \shot[0.98]{screenshots/projects.png}{Projects list}\\[3pt]
+      {\scriptsize\bfseries\color{navyMid} Projects dashboard}
+    \end{column}
+    \begin{column}{0.32\textwidth}\centering
+      \shot[0.98]{screenshots/board.png}{Kanban board}\\[3pt]
+      {\scriptsize\bfseries\color{navyMid} Kanban board}
+    \end{column}
+    \begin{column}{0.32\textwidth}\centering
+      \shot[0.98]{screenshots/planning.png}{Sprint planning}\\[3pt]
+      {\scriptsize\bfseries\color{navyMid} Sprint planning}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Delivery Insights and Risk Register}
+  \begin{columns}[T]
+    \begin{column}{0.32\textwidth}\centering
+      \shot[0.98]{screenshots/insights-forecast.png}{Forecast gauge and P50/P85/P95 bands}\\[3pt]
+      {\scriptsize\bfseries\color{navyMid} Delivery forecast}
+    \end{column}
+    \begin{column}{0.32\textwidth}\centering
+      \shot[0.98]{screenshots/insights-critical-path.png}{Critical path and burndown}\\[3pt]
+      {\scriptsize\bfseries\color{navyMid} Critical path \& burndown}
+    \end{column}
+    \begin{column}{0.32\textwidth}\centering
+      \shot[0.98]{screenshots/risks.png}{Risk register heatmap}\\[3pt]
+      {\scriptsize\bfseries\color{navyMid} Risk register}
+    \end{column}
+  \end{columns}
+  \vspace{0.3cm}
+  \panel[0.95]{\footnotesize
+    \textbf{What the forecast panel shows:}\ Probability of on-time delivery \textbullet\
+    P50 / P85 / P95 confidence bands \textbullet\ Critical chain of zero-slack tasks \textbullet\
+    Scope growth since sprint commitment \textbullet\ Risk exposure (probability $\times$ impact)}
+\end{frame}
+
+% =====================================================================
+% Q5 -- LIMITATIONS AND FUTURE SCOPE
+% =====================================================================
+\begin{frame}{Q5. Limitations of the Current System}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      \begin{itemize}\small
+        \item \textbf{Token storage:} JWT kept in \texttt{localStorage}; not revocable on logout
+        \item \textbf{Roles:} only \texttt{owner} and \texttt{member}; no fine-grained permissions
+        \item \textbf{Forecast calendar:} weekdays only -- no holiday or leave calendar
+        \item \textbf{Single instance:} in-process cache and rate-limit; not shared across API replicas
+        \item \textbf{New teams:} Monte Carlo needs past sprint history; falls back to estimates for teams with no history
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \begin{itemize}\small
+        \item \textbf{UI coverage:} workload and dependency-graph API endpoints exist but are not surfaced in the UI
+        \item \textbf{Health check:} reports process status; does not verify MongoDB connectivity
+        \item \textbf{Testing:} 77 server tests; zero client-side automated tests
+        \item \textbf{Validation:} benchmarked against seeded demo data, not a real team's history
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Q5. Future Scope}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Planned (in the project README)}
+        \begin{itemize}\small
+          \item Cumulative-flow and cycle-time diagrams
+          \item What-if simulation: ``drop this task $\Rightarrow$ probability goes to X\%''
+          \item Sprint-health alerts when forecast drops below threshold
+          \item Roles beyond owner and member
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Natural next steps}
+        \begin{itemize}\small
+          \item Holiday-aware, per-team working calendar
+          \item Workload and dependency-graph views in the UI
+          \item Shared Redis cache + rate-limit for multi-instance deployment
+          \item Frontend component and end-to-end tests (Playwright)
+          \item Calibrate forecasts against real team history
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+% THANK YOU
+% =====================================================================
+\begin{frame}[plain]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[navyDeep] (current page.south west) rectangle (current page.north east);
+    \fill[tealAccent] ([yshift=-1.1cm]current page.north west) rectangle
+                      ([yshift=-1.18cm]current page.north east);
+    \fill[tealAccent] ([yshift=1.0cm]current page.south west) rectangle
+                      ([yshift=1.08cm]current page.south east);
+  \end{tikzpicture}
+  \vfill
+  \begin{center}
+    {\color{white}\Huge\bfseries Thank You\par}
+    \vspace{0.4cm}
+    {\color{tealAccent}\large Questions?\par}
+    \vspace{0.6cm}
+    \begin{tikzpicture}
+      \node[fill=navyMid, rounded corners=6pt, inner sep=8pt, text=white, align=center]{%
+        \small Mrunal Nikam \quad Akshit Kumar \quad Bhargavi Piridi};
+    \end{tikzpicture}
+    \vspace{0.3cm}
+    {\color{white}\footnotesize Department of Computer Science \& Engineering\par}
+    {\color{white}\footnotesize Indian Institute of Information Technology, Vadodara\par}
+    \vspace{0.3cm}
+    {\color{tealAccent}\footnotesize\texttt{github.com/bhargavi-46/Predictive-Sprint-Planning}\par}
   \end{center}
   \vfill
 \end{frame}
