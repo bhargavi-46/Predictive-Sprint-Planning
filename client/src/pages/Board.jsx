@@ -257,34 +257,47 @@ export default function Board() {
   const selectedSprint = sprints.find((s) => s.id === selectedSprintId) || null;
 
   return (
-    <main className="mx-auto max-w-[100rem] px-5 py-7">
-      <nav className="mb-2 flex items-center gap-2 text-[13px]">
-        <Link to="/projects" className="text-slate-500 transition-colors hover:text-navy">
-          Projects
-        </Link>
-        <span className="text-slate-300">/</span>
-        <span className="font-medium text-navy">{project.name}</span>
-      </nav>
+    <div className="min-h-screen bg-paper">
+      {/* ── Top header bar ──────────────────────────────────────── */}
+      <div
+        className="sticky top-0 z-30 border-b border-white/10 px-6 py-3 shadow-lg"
+        style={{ background: 'linear-gradient(135deg, #0a1929 0%, #122842 60%, #0d3d3a 100%)' }}
+      >
+        <div className="mx-auto flex max-w-[100rem] items-center justify-between gap-4">
+          {/* Breadcrumb */}
+          <div className="flex items-center gap-2 text-sm min-w-0">
+            <Link to="/projects" className="font-medium text-slate-400 hover:text-teal transition-colors">
+              Projects
+            </Link>
+            <span className="text-slate-600">/</span>
+            <span className="font-bold text-white truncate">{project.name}</span>
+            {project.description && (
+              <>
+                <span className="text-slate-600 hidden md:inline">·</span>
+                <span className="hidden md:inline text-xs text-slate-500 truncate max-w-xs">{project.description}</span>
+              </>
+            )}
+          </div>
 
-      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
-        <div className="min-w-0">
-          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-navy">
-            {project.name}
-          </h1>
-          {project.description && (
-            <p className="mt-1 max-w-2xl text-sm text-slate-500">{project.description}</p>
-          )}
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <Link to={`/projects/${projectId}/insights`} className="btn-secondary">
-            Delivery Insights
-          </Link>
-          <Link to={`/projects/${projectId}/risks`} className="btn-secondary">
-            Risk Register
-          </Link>
+          {/* Action buttons */}
+          <div className="flex shrink-0 items-center gap-2">
+            <Link
+              to={`/projects/${projectId}/insights`}
+              className="rounded-lg border border-white/15 bg-white/8 px-3.5 py-1.5 text-xs font-semibold text-slate-200 transition-all hover:bg-teal/20 hover:border-teal/40 hover:text-white"
+            >
+              Delivery Insights
+            </Link>
+            <Link
+              to={`/projects/${projectId}/risks`}
+              className="rounded-lg border border-white/15 bg-white/8 px-3.5 py-1.5 text-xs font-semibold text-slate-200 transition-all hover:bg-rose-500/20 hover:border-rose-400/40 hover:text-white"
+            >
+              Risk Register
+            </Link>
+          </div>
         </div>
       </div>
+
+    <main className="mx-auto max-w-[100rem] px-5 py-6">
 
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3
                       border-b border-slate-200">
@@ -347,7 +360,7 @@ export default function Board() {
           onDragEnd={onDragEnd}
           onDragCancel={() => setActiveTask(null)}
         >
-          <div className="flex gap-4 overflow-x-auto pb-4">
+          <div className="grid grid-cols-4 gap-4 pb-4">
             {COLUMNS.map((col) => (
               <BoardColumn
                 key={col.id}
@@ -423,5 +436,6 @@ export default function Board() {
         onDependencyChange={handleDependencyChange}
       />
     </main>
+    </div>
   );
 }
