@@ -389,13 +389,4 @@ See `docs/DATA_MODEL.md` for the ER diagram and schema rationale.
 
 ---
 
-## About
 
-Built for the Software Project Management course, Computer Science &
-Engineering, **IIIT Vadodara**.
-
-**Group 24** — Hasini Reddy · Mrunal Nikam · Akshit Kumar · Bhargavi Piridi
-
-## License
-
-MIT
